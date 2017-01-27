@@ -397,25 +397,25 @@ class DB(object):
             totalEntrees = self.Nlenses*4.0
             t = Table(np.arange(totalEntrees).reshape(self.Nlenses, 4),
                       names=bands)
-
      	    lens_count = 0
             total = len(self.sample)
      	    Gfilter = tools.filterfromfile('g_SDSS')
      	    Ifilter = tools.filterfromfile('i_SDSS')
      	    Zfilter = tools.filterfromfile('z_SDSS')
+            if target == 'source':
+                # if target is lens, use appropriate SED
+                sed = tools.getSED('agn')
+     	    elif target == 'lens':
+                # if target is galaxy, use appropriate SED
+                sed = tools.getSED('BC_Z=1.0_age=9.000gyr')
+            
 
             for lens in self.sample:
                 # assign constants according to the type of the object
                 if target == 'source':
-                    # if target is lens, use appropriate SED
-                    sed = tools.getSED('agn')
-                    redshift = source_redshift
-                    # Hack: interpret OM10 i-band source magnitude as an
-                    # r-band magnitude...
-                    RF_Rmag_app, offset = lens['MAGI_IN'], 0.0
+                    # redshift = source_redshift
+                    RF_Rmag_app, offset = lens['MAGR_IN'], 0.0
                 elif target == 'lens':
-                    # if target is galaxy, use appropriate SED
-                    sed = tools.getSED('BC_Z=1.0_age=9.000gyr')
                     veldisp = np.atleast_1d(lens['VELDISP'])
                     redshift = lens['ZLENS']
                     RF_Rmag_app, offset = self.calculate_rest_frame_r_magnitude(sed, veldisp, redshift, d)
