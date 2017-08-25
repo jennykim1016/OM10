@@ -479,16 +479,17 @@ class DB(object):
         Parameters
         ----------
         fitted_slope:
-        The slope of the best-fitted linear regression line that has velocity dispersions in the x-axis and effective radius in the y-axis.
+        The slope of the best-fitted linear regression line that has natural log of velocity dispersions in the x-axis and the natural log of effective radius in the y-axis.
         fitted_intercept:
-        The intercept of the best-fitted linear regression line that has velocity dispersions in the x-axis and effective radius in the y-axis.
+        The intercept of the best-fitted linear regression line that has the natural log of velocity dispersions in the x-axis and the natural log of effective radius in the y-axis.
         std_err:
         Standard error of the residuals of the data points.
         """
           
         predict_size = lambda x: x*fitted_slope + fitted_intercept + np.random.normal(0, std_err)
         for lens in self.sample:
-            lens['REFF'] = predict_size(lens['VELDISP'])
+            log_lens = predict_size(log(lens['VELDISP']))
+            lens['REFF'] = np.power(math.e, log_lens)
         self.lenses = self.sample.copy() # update the original lenses table too!
 
 # ----------------------------------------------------------------------------
