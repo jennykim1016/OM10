@@ -472,6 +472,26 @@ class DB(object):
 
 # ----------------------------------------------------------------------------
 
+    def calculate_size(self, fitted_slope, fitted_intercept, std_err):
+        """
+        Update 'Reff' column in the OM10 table to have realistic size.
+        
+        Parameters
+        ----------
+        fitted_slope:
+        The slope of the best-fitted linear regression line that has velocity dispersions in the x-axis and effective radius in the y-axis.
+        fitted_intercept:
+        The intercept of the best-fitted linear regression line that has velocity dispersions in the x-axis and effective radius in the y-axis.
+        std_err:
+        Standard error of the residuals of the data points.
+        """
+          
+        predict_size = lambda x: x*fitted_slope + fitted_intercept + np.random.normal(0, std_err)
+        for lens in self.sample:
+            lens['REFF'] = predict_size(lens['VELDISP'])
+        self.lenses = self.sample.copy() # update the original lenses table too!
+
+# ----------------------------------------------------------------------------
     def gaussian_reweight(self, mean, stdev):
         """
         Add new columns to the table, for the magnitudes in various filters.
