@@ -488,8 +488,12 @@ class DB(object):
           
         predict_size = lambda x: x*fitted_slope + fitted_intercept + np.random.normal(0, std_err)
         for lens in self.sample:
-            log_lens = predict_size(np.log10(lens['VELDISP']))
-            lens['REFF'] = np.power(10, log_lens)
+            log_size = predict_size(log10(lens['VELDISP']))
+            lens['REFF'] = np.power(10, log_size)
+            dist = distances.Distance()
+            lens_distance_kpc = dist.angular_diameter_distance(lens['ZLENS'])*1000 # returns megaparsecs
+            angle_radian = lens['REFF']/lens_distance_kpc
+            lens['REFF_T'] = angle_radian * 206265 # arcsec
         self.lenses = self.sample.copy() # update the original lenses table too!
 
 # ----------------------------------------------------------------------------
