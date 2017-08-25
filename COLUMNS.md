@@ -32,5 +32,5 @@
 | SIGCRIT   | double        |  Sigcrit       |              |
 | DSLUM     | double        |  DLs           |              |
 | L_I       | double        |  -             |              |
-| REFF      | double        |  -             |              |
+| REFF      | double        |  -             |Size of the lensing galaxy in kiloparsecs|
 | REFF_T    | double        |  -             |              |
