@@ -472,7 +472,7 @@ class DB(object):
 
 # ----------------------------------------------------------------------------
 
-    def calculate_size(self, fitted_slope, fitted_intercept, std_err):
+    def calculate_size(self, fitted_slope=0.318994087809, fitted_intercept=0.319531946588, std_err=0.277437718926):
         """
         Update 'Reff' column in the OM10 table to have realistic size.
         
@@ -485,7 +485,8 @@ class DB(object):
         std_err:
         Standard error of the residuals of the data points.
         """
-          
+
+        print('Assuming slope of the fitted graph: ', fitted_slope, 'intercept: ', fitted_intercept, 'and standard error of the residuals :', std_err)
         predict_size = lambda x: x*fitted_slope + fitted_intercept + np.random.normal(0, std_err)
         for lens in self.sample:
             log_size = predict_size(log10(lens['VELDISP']))
